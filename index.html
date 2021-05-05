@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Lista de tarefas.</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card">
+
+            <div class="card-header text-center">
+                <h3 id="TitleForm">Criar nova tarefa</h3>
+
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label class="sr-only" for="TitleTask">Título da tarega</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Título da tarefa</div>
+                            </div>
+                            <input type="text" class="form-control" id="TitleTask">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label class="sr-only" for="ContentTask">Título da tarefa</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Descrição da tarefa</div>
+                            </div>
+                            <textarea class="form-control" id="ContentTask"> </textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="saveTask" onclick="saveTask()">Salvar</button>
+                <button type="button" class="btn btn-danger invisible" id="removeTask"
+                    onclick="removeTask()">Excluir</button>
+                <button type="button" class="btn btn-success invisible" id="newTask" onclick="recomposeForm()">Nova
+                    Tarefa</button>
+            </div>
+            <div class="card-footer">
+                <div class=" input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="listTasks">Tarefas</label>
+                    </div>
+                    <select multiple class="custom-select" id="listTasks">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.js"
+            integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        <script>
+            var tasks = []
+            var idEdit = ''
+            $(function () {
+                $('#listTasks').click(function () { showTask() })
+            })
+
+            function updateListTasks() {
+                $('#listTasks').find('option').remove()
+                tasks.forEach(FillListTasks)
+            }
+            function FillListTasks(e, i, a) {
+                $('#listTasks').append('<option value="' + i + '">' + e[0] + '</option>')
+            }
+            function recomposeForm() {
+                idEdit = ''
+                $('#TitleForm').html("Criar nova tarefa")
+                $('#removeTask').addClass('invisible')
+                $('#newTask').addClass('invisible')
+                $('#saveTask').text('Salvar').addClass('btn-primary').removeClass('btn-warning')
+                $('#TitleTask').val('')
+                $('#ContentTask').val('')
+                updateListTasks()
+            }
+
+            function saveTask() {
+                if (idEdit == '') {
+                    //Caso for nova tarefa
+                    var _title = $('#TitleTask').val()
+                    var _content = $('#ContentTask').val()
+                    tasks.push([_title, _content])
+                } else {
+                    //Caso for atualizar uma tarefa
+                    var i = $('#listTasks').val();
+                    tasks[i][0] = $('#TitleTask').val()
+                    tasks[i][1] = $('#ContentTask').val()
+                }
+                recomposeForm();
+            }
+
+            function showTask() {
+                var i = $('#listTasks').val();
+                $('#TitleTask').val(tasks[i][0])
+                $('#ContentTask').val(tasks[i][1])
+                idEdit = i
+                $('#saveTask').text('Atualizar').removeClass('btn-primary').addClass('btn-warning')
+                $('#removeTask').removeClass('invisible')
+                $('#newTask').removeClass('invisible')
+                $('#TitleForm').html("Atualizar Tarefa")
+                console.log(idEdit)
+            }
+            function removeTask() {
+                delete tasks[idEdit]
+                recomposeForm();
+            }
+        </script>
+
+</body>
+
+</html>
